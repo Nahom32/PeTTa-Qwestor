@@ -197,10 +197,19 @@
 ))
 
 (= (default-goals) (goal-vector
-   (integerity 0.2) 
-   (energy 0.4) 
-   (competence 0.5) 
-   (affiliation 0.7) 
+ (efficiency 0.60)
+ (accuracy 0.70)
+ (success_moderate 0.62)
+ (knowledge 0.52)
+ (novelty 0.46)
+ (novelty 0.46)
+ (success_breakthrough 0.44)
+ (coherence 0.58)
+ (originality 0.48)
+ (social 0.58)
+ (help_short 0.55)
+ (help_long 0.45)
+ (over_beneficial 0.60)
+ (over_safety 0.65)
+ (over_honesty 0.65)
 ))
-
-
