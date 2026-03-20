@@ -1,29 +1,41 @@
 !(import! &self state)
 !(import! &self ../operators/appraisal)
+!(import! &self ../operators/decision)
 !(import! &self "context.py")
 !(import! &self space)
 
 
-; 1. getting context from space space/generating the repspective context from llm by giving some query.
-; 2. getting state from the space
-; 3. calculating mods by using calculate-mods function in appraisal module
-; 4. update only mods by using update-mods  function in appraisal module.
-; 5. decision module (this part hasn't been began.) yet we know that it uses the modulators and stuffs to 
-      ; update the goal vectos and then decides what to do next.
-; 6. after that the state will be given to LLM then LLM generates 
-; all content then the user will also respond to it after  that that response will be update the context-->modulator,and stuffs
-;  that is what i  understood so far.
-; if there is anything that need further study i will explore  and implement it.
+; ─────────────────────────────────────────────
+; Main loop overview
+; ─────────────────────────────────────────────
+; 1. Parse user query → context signals via LLM (context.py).
+; 2. Store context signals in the space.
+; 3. Compute updated modulators with calculate-mod.
+; 4. Update the state's modulator vector.
+; 5. [Planned] Decision module: update goal weights, choose action.
+; 6. [Planned] Generate LLM response, feed user reply back into context.
 
+
+; ─────────────────────────────────────────────
+; addContexts
+; If no context was parsed (empty list), inject
+; the built-in defaults instead.
+; ─────────────────────────────────────────────
 (= (addContexts $space $context)
    (if (== $context ())
-        (add-context $space (context)) ;add default context values
+        (add-context $space (context))
         (add-context $space $context)
     )
 )
 
+
+; ─────────────────────────────────────────────
+; setUpSpace
+; Populate a fresh space with alpha hyper-params
+; and an initial state (default goals + default mods).
+; ─────────────────────────────────────────────
 (= (setUpSpace $space)
-   (let* 
+   (let*
      (
       ($_ (addAlpha $space (alpha)))
       ($_ (addState $space (state (default-goals) (default-mods))))
@@ -34,13 +46,18 @@
 
 (= (mainLoop $space $query)
     (let* (
-            ($context (py-call (context.wrap_parser $query)))
+            ($context       (py-call (context.wrap_parser $query)))
             ($_ (addContexts $space $context))
-            ($calculated-mods (calculate-mod))
+            ($calculated-mods (calculate-mod $space))    
+            ($_ (update-mods $space $calculated-mods))
           )
         $calculated-mods
     )
 )
 
+
+; ─────────────────────────────────────────────
+; Entry point
+; ─────────────────────────────────────────────
 !(setUpSpace &space)
 !(mainLoop &space "Can you verify if the quantum computing breakthrough is real? I need detailed analysis comparing expert opinions.")
