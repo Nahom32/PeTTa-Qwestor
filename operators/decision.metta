@@ -81,3 +81,88 @@
       ))
       (updateGoals $state_space $goalList)
     )
+
+
+
+    ; Constants
+(= (ACTION-BLOCKED-SCORE) -1000000000.0)
+(= (ACTION-ACTIVE-FLOOR) -100000000.0)
+
+; Math helpers
+(= (abs $x) (if (< $x 0.0) (* $x -1.0) $x))
+
+; Dictionary & Tuple helpers (designed for 2-element tuples)
+(= (get-score (($k1 $v1) ($k2 $v2)) $key)
+   (if (== $k1 $key) $v1
+       (if (== $k2 $key) $v2 (ACTION-BLOCKED-SCORE))))
+
+(= (update-score (($k1 $v1) ($k2 $v2)) $key $new-val)
+   (if (== $k1 $key) (($k1 $new-val) ($k2 $v2))
+       (if (== $k2 $key) (($k1 $v1) ($k2 $new-val))
+           (($k1 $v1) ($k2 $v2)))))
+
+(= (sort-scores (($k1 $v1) ($k2 $v2)))
+   (if (>= $v1 $v2)
+       (($k1 $v1) ($k2 $v2))
+       (($k2 $v2) ($k1 $v1))))
+
+(= (best-action (($k1 $v1) ($k2 $v2)))
+   (if (>= $v1 $v2) $k1 $k2))
+
+; Determine preferred action based on intent and thresholds
+(= (get-preferred $intent_type $low_conf $threshold)
+   (if (== $intent_type factual) act_search
+       (if (== $intent_type reflective) act_think
+           (if (or (>= $low_conf 0.40) (>= $threshold 0.45)) act_search act_think))))
+
+; Main action selection logic
+(= (selectAction $scores $intent_type $low_conf $threshold $intent_margin)
+   (let* (
+     ($search_score (get-score $scores act_search))
+     ($think_score (get-score $scores act_think))
+     ($diff (abs (- $search_score $think_score)))
+     ($is_active (and (> $search_score (ACTION-ACTIVE-FLOOR)) 
+                      (> $think_score (ACTION-ACTIVE-FLOOR))))
+     ($is_tie (and $is_active (<= $diff $intent_margin)))
+   )
+   (if $is_tie
+       (let* (
+         ($preferred (get-preferred $intent_type $low_conf $threshold))
+         ($new_score (+ (+ (max $search_score $think_score) $intent_margin) 0.0001))
+         ($updated_scores (update-score $scores $preferred $new_score))
+       ) ((best-action $updated_scores) (sort-scores $updated_scores)))
+       ((best-action $scores) (sort-scores $scores))
+   )))
+
+; Example Call
+; !(selectAction ((act_think 0.7) (act_search 0.72)) factual 0.35 0.44 0.03)
+
+(= (_clamp11 $x)
+  (if (and (< $x 1) (> $x -1))
+     $x
+     (if (> $x 1)
+      1
+      -1
+      )
+   )
+)
+
+; (= (_score_actions $actionList $weightedGaol $res)
+;  (if (== $actionList ())
+;     $res
+;    (let*  
+;    (($h (car-atom $actionList))
+;     ($t (cdr-atom $actionList))
+;     ($current ( $h)))
+;  ($new_res (cons $res $currnt))
+; (_score_actions $t $new_res)
+;  ))
+; )
+
+; (= (score_helper $action $weightedGaol)
+; (let* 
+;  ($score (map-atom ))
+
+; )
+
+; )
