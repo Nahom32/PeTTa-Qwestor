@@ -82,7 +82,6 @@
 
 ; ─────────────────────────────────────────────
 ; updateGoals – replace the entire goal list.
-; FIX BUG-1: add-state now passes $space.
 ; ─────────────────────────────────────────────
 (= (updateGoals $space $goals)
       (let* (
@@ -533,6 +532,84 @@
             (over_safety          (_clamp01 $t_safe))
             (over_honesty         (_clamp01 $t_hon))
           )
+        )
+    )
+)
+
+
+; ─────────────────────────────────────────────
+; antiGoalTargets – port of Python logic
+; Returns an anti-goal-vector with clamped targets.
+; ─────────────────────────────────────────────
+(= (antiGoalTargets $space $goals)
+    (let*
+        (
+            ($threshold      (getContext $space threshold))
+            ($familiarity    (getContext $space topic_familiarity))
+            ($failure_signal (getContext $space failure_signal))
+            ($urgent_bool    (getContext $space urgent))
+            ($urgency        (if (== $urgent_bool True) 1.0 0.0))
+            ($complexity     (getContext $space complexity))
+            ($ambiguity      (getContext $space ambiguity))
+            ($expertise      (getContext $space expertise))
+
+            ($help_short_now
+              (let 
+                (goal-vector
+                  (efficiency           $g_eff)
+                  (accuracy             $g_acc)
+                  (success_moderate     $g_smod)
+                  (knowledge            $g_kn)
+                  (novelty              $g_nov)
+                  (success_breakthrough $g_sbr)
+                  (coherence            $g_coh)
+                  (originality          $g_ori)
+                  (social               $g_soc)
+                  (help_short           $g_hs)
+                  (help_long            $g_hl)
+                  (over_beneficial      $g_ben)
+                  (over_safety          $g_safe)
+                  (over_honesty         $g_hon)
+                )
+                $goals
+                $g_hs
+              )
+            )
+
+            ($hallucinate_target
+              (+ 0.15
+                 (+ (* 0.55 $threshold)
+                    (+ (* 0.25 (- 1.0 $familiarity))
+                       (* 0.20 $failure_signal)))))
+
+            ($redundant_target
+              (+ 0.22
+                 (+ (* 0.45 $help_short_now)
+                    (+ (* 0.18 $expertise)
+                       (+ (* 0.15 (- 1.0 $ambiguity))
+                          (* 0.05 $urgency))))))
+
+            ($premature_target
+              (+ 0.20
+                 (+ (* 0.45 $complexity)
+                    (+ (* 0.30 $ambiguity)
+                       (+ (* 0.20 $threshold)
+                          (+ (* -0.20 $help_short_now)
+                             (* 0.08 (- 1.0 $familiarity))))))))
+
+            ($rabbit_hole_target
+              (+ 0.18
+                 (+ (* 0.40 $help_short_now)
+                    (+ (* 0.25 $urgency)
+                       (+ (* 0.20 (- 1.0 $complexity))
+                          (+ (* 0.20 (- 1.0 $ambiguity))
+                             (* 0.08 $expertise)))))))
+        )
+        (anti-goal-vector
+          (hallucinate (_clamp01 $hallucinate_target))
+          (redundant   (_clamp01 $redundant_target))
+          (rabbit_hole (_clamp01 $rabbit_hole_target))
+          (premature   (_clamp01 $premature_target))
         )
     )
 )
