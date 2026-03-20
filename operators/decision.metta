@@ -613,3 +613,126 @@
         )
     )
 )
+
+; ── constants ───────────────────────────────────────────────
+(= (ACTION-BLOCKED-SCORE) -1000000000.0)
+(= (ACTION-ACTIVE-FLOOR) -100000000.0)
+
+
+; ── math helpers ────────────────────────────────────────────
+(= (abs $x)
+    (if (< $x 0.0)
+        (* $x -1.0)
+        $x
+    )
+)
+
+
+; ── tuple / dictionary helpers (2-element tuples) ───────────
+(= (get-score (($k1 $v1) ($k2 $v2)) $key)
+    (if (== $k1 $key)
+        $v1
+        (if (== $k2 $key)
+            $v2
+            (ACTION-BLOCKED-SCORE)
+        )
+    )
+)
+
+(= (update-score (($k1 $v1) ($k2 $v2)) $key $new-val)
+    (if (== $k1 $key)
+        (($k1 $new-val) ($k2 $v2))
+        (if (== $k2 $key)
+            (($k1 $v1) ($k2 $new-val))
+            (($k1 $v1) ($k2 $v2))
+        )
+    )
+)
+
+(= (sort-scores (($k1 $v1) ($k2 $v2)))
+    (if (>= $v1 $v2)
+        (($k1 $v1) ($k2 $v2))
+        (($k2 $v2) ($k1 $v1))
+    )
+)
+
+(= (best-action (($k1 $v1) ($k2 $v2)))
+    (if (>= $v1 $v2)
+        $k1
+        $k2
+    )
+)
+
+
+; ── intent preference logic ─────────────────────────────────
+(= (get-preferred $intent_type $low_conf $threshold)
+    (if (== $intent_type factual)
+        act_search
+        (if (== $intent_type reflective)
+            act_think
+            (if (or (>= $low_conf 0.40)
+                    (>= $threshold 0.45))
+                act_search
+                act_think
+            )
+        )
+    )
+)
+
+
+; ── main action selection ───────────────────────────────────
+(= (selectAction $scores $intent_type $low_conf $threshold $intent_margin)
+
+    (let*
+        (
+            ; ── score extraction ───────────────────────────
+            ($search_score   (get-score $scores act_search))
+            ($think_score    (get-score $scores act_think))
+
+            ; ── comparison metrics ─────────────────────────
+            ($diff           (abs (- $search_score $think_score)))
+
+            ($is_active
+                (and (> $search_score (ACTION-ACTIVE-FLOOR))
+                     (> $think_score  (ACTION-ACTIVE-FLOOR))))
+
+            ($is_tie
+                (and $is_active
+                     (<= $diff $intent_margin)))
+        )
+
+        (if $is_tie
+
+            ; ── tie-breaking using intent ──────────────────
+            (let*
+                (
+                    ($preferred
+                        (get-preferred $intent_type $low_conf $threshold))
+
+                    ($new_score
+                        (+ (+ (max $search_score $think_score)
+                              $intent_margin)
+                           0.0001))
+
+                    ($updated_scores
+                        (update-score $scores $preferred $new_score))
+                )
+
+                (
+                    (best-action $updated_scores)
+                    (sort-scores $updated_scores)
+                )
+            )
+
+            ; ── normal selection ───────────────────────────
+            (
+                (best-action $scores)
+                (sort-scores $scores)
+            )
+        )
+    )
+)
+
+
+; ── example usage ───────────────────────────────────────────
+; !(selectAction ((act_think 0.7) (act_search 0.72)) factual 0.35 0.44 0.03)
