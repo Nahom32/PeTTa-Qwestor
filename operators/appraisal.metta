@@ -13,7 +13,7 @@
 ; ─────────────────────────────────────────────
 
 (= (getMods $space)  (match $space (state $x $y) $y))
-(= (get-goals $space)(match $space (state $x $y) $x))
+(= (getGoals $space)(match $space (state $x $y) $x))
 (= (get_state $space)(match $space (state $x $y) (state $x $y)))
 
 (= (remove-state $space)
@@ -95,9 +95,9 @@
 ; ─────────────────────────────────────────────
 (= (update-mods $space $mods)
       (let* (
-         ($goal     (get-goals $space))
+         ($goal     (getGoals $space))
          ($_ (remove-state $space))
-         ($updated  (state $goal (cons modulator-vector $mods)))
+         ($updated  (state $goal (cons modulatorVector $mods)))
          ($_ (add-state $space $updated))          
          )
          (println! (mods update success 🎉))
@@ -254,8 +254,8 @@
             (* (getAlpha $space valence_alpha)                $valence_target))))
       )
 
-      ; ── return the full updated modulator-vector ──────────
-      (modulator-vector
+      ; ── return the full updated modulatorVector ──────────
+      (modulatorVector
         (m_urgency           $m_urgency)
         (m_resolution        $m_resolution)
         (m_user_expertise    $m_user_expertise)
@@ -297,7 +297,7 @@
 ; Default modulator vector (13 modulators)
 ; ─────────────────────────────────────────────
 (= (default-mods) (
-         modulator-vector
+         modulatorVector
         (m_urgency           0.20)
         (m_resolution        0.40)
         (m_user_expertise    0.50)
@@ -341,7 +341,7 @@
 ; ─────────────────────────────────────────────
 ; Default goal vector
 ; ─────────────────────────────────────────────
-(= (default-goals) (goal-vector
+(= (default-goals) (goalVector
  (efficiency           0.60)
  (accuracy             0.70)
  (success_moderate     0.62)

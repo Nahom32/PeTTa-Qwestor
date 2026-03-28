@@ -6,13 +6,13 @@
 
 
 ; ─────────────────────────────────────────────
-; get-goal – read a single goal value by name.
+; getGoal – read a single goal value by name.
 ;   match the canonical default-goals ordering.
 ; ─────────────────────────────────────────────
-(= (get-goal $space $goal-name)
+(= (getGoal $space $goal-name)
 (let*
    (
-    ($goal-vec  (fetch-goals $space))
+    ($goal-vec  (fetchGoals $space))
     ($goal-list (cdr-atom $goal-vec))
     ($pair
     (case $goal-name
@@ -43,7 +43,7 @@
 ;           used inside goalWeight formulas.
 ; ─────────────────────────────────────────────
 (= (getGoal $space $goal-name)
-   (get-goal $space $goal-name)
+   (getGoal $space $goal-name)
 )
 
 
@@ -54,7 +54,7 @@
     (let*
      (
         ($current-modulator-vec (fetch-modulators $space))
-        ($current-goal (cdr-atom (fetch-goals $space)))
+        ($current-goal (cdr-atom (fetchGoals $space)))
         ($update-goal  (case $name
         (
             (efficiency           (replaceByIndex $current-goal 0  ($name $value)))
@@ -72,7 +72,7 @@
             (over_safety          (replaceByIndex $current-goal 12 ($name $value)))
             (over_honesty         (replaceByIndex $current-goal 13 ($name $value)))
         )))
-        ($updated-state (state (cons goal-vector $update-goal) $current-modulator-vec))
+        ($updated-state (state (cons goalVector $update-goal) $current-modulator-vec))
         ($_ (remove-state $space))
      )
      (add-state $space $updated-state)
@@ -87,7 +87,7 @@
       (let* (
          ($mods     (getMods $space))
          ($_ (remove-state $space))
-         ($updated  (state (cons goal-vector $goals) $mods))
+         ($updated  (state (cons goalVector $goals) $mods))
          ($_ (add-state $space $updated))    ; ← $space was missing before
          )
          (println! (goals update success 🎉))
@@ -352,7 +352,7 @@
             ($targets
               (case $action (
                 (act_search
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             (+ $base_accuracy 0.05))
                     (success_moderate     (+ $base_success_moderate 0.01))
@@ -370,7 +370,7 @@
                   ))
 
                 (act_verify
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             (+ $base_accuracy 0.06))
                     (success_moderate     (+ $base_success_moderate 0.06))
@@ -388,7 +388,7 @@
                   ))
 
                 (act_think
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             (+ $base_accuracy 0.04))
                     (success_moderate     (+ $base_success_moderate -0.02))
@@ -406,7 +406,7 @@
                   ))
 
                 (act_respond
-                  (goal-vector
+                  (goalVector
                     (efficiency           (+ $base_efficiency 0.05))
                     (accuracy             $base_accuracy)
                     (success_moderate     (+ $base_success_moderate 0.02))
@@ -424,7 +424,7 @@
                   ))
 
                 (act_clarify
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             (+ $base_accuracy 0.03))
                     (success_moderate     (+ $base_success_moderate 0.03))
@@ -442,7 +442,7 @@
                   ))
 
                 (act_decompose
-                  (goal-vector
+                  (goalVector
                     (efficiency           (+ $base_efficiency 0.01))
                     (accuracy             (+ $base_accuracy 0.04))
                     (success_moderate     (+ $base_success_moderate 0.04))
@@ -460,7 +460,7 @@
                   ))
 
                 (act_synthesize
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             (+ $base_accuracy 0.05))
                     (success_moderate     (+ $base_success_moderate 0.05))
@@ -478,7 +478,7 @@
                   ))
 
                 ($_
-                  (goal-vector
+                  (goalVector
                     (efficiency           $base_efficiency)
                     (accuracy             $base_accuracy)
                     (success_moderate     $base_success_moderate)
@@ -499,7 +499,7 @@
         )
 
         (let 
-          (goal-vector
+          (goalVector
             (efficiency           $t_eff)
             (accuracy             $t_acc)
             (success_moderate     $t_smod)
@@ -516,7 +516,7 @@
             (over_honesty         $t_hon)
           )
           $targets
-          (goal-vector
+          (goalVector
             (efficiency           (_clamp01 $t_eff))
             (accuracy             (_clamp01 $t_acc))
             (success_moderate     (_clamp01 $t_smod))
@@ -539,7 +539,7 @@
 
 ; ─────────────────────────────────────────────
 ; antiGoalTargets – port of Python logic
-; Returns an anti-goal-vector with clamped targets.
+; Returns an anti-goalVector with clamped targets.
 ; ─────────────────────────────────────────────
 (= (antiGoalTargets $space $goals)
     (let*
@@ -555,7 +555,7 @@
 
             ($help_short_now
               (let 
-                (goal-vector
+                (goalVector
                   (efficiency           $g_eff)
                   (accuracy             $g_acc)
                   (success_moderate     $g_smod)
@@ -605,7 +605,7 @@
                           (+ (* 0.20 (- 1.0 $ambiguity))
                              (* 0.08 $expertise)))))))
         )
-        (anti-goal-vector
+        (anti-goalVector
           (hallucinate (_clamp01 $hallucinate_target))
           (redundant   (_clamp01 $redundant_target))
           (rabbit_hole (_clamp01 $rabbit_hole_target))

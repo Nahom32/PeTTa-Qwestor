@@ -25,7 +25,7 @@
     ; (valence_alpha 0.40)))        ; How fast emotional valence adapts
 
 
-(= (add-state $space)
+(= (add-state $space $state)
     (add-atom $space $state)
 )
 
@@ -49,7 +49,7 @@
 ))
 (= (fetch-modulators $space)(match $space (state $x $y) $y))
 (= (fetch-state $space) (match $space (state $x $y) (state $x $y)))
-(= (fetch-goals $space)(match $space (state $x $y) $x))
+(= (fetchGoals $space)(match $space (state $x $y) $x))
 
 (= (remove-state $space)
  (let $state (fetch-state $space) (remove-atom $space $state))
@@ -78,7 +78,7 @@
 
 (= (update-single-mods $space $mod-list) 
 (if (== () $mod-list)
-      (println! ("update-completed")
+      (println! ("update-completed"))
 
       (let* (
          ($h (car-atom $mod-list))
@@ -88,14 +88,14 @@
          ($_ (update-modulator $space $name $val))
          )
          (update-mods $space $t)
-      ))
+      )
 )
 )
 
 (= (update-modulator $space $name $value)
     (let*
      (
-        ($current-goal-vec (get-goals $space))
+        ($current-goal-vec (getGoals $space))
         ($current-modulator (cdr-atom (get-mods $space)))
         ($update-modulator  (case $name 
         ( 
@@ -115,7 +115,7 @@
         
         )))
         ; here the function goes through the logic of monadic(D) computation using different formulas and logic but it is to show how the space works 
-        ($updated-state (state $current-goal-vec (cons modulator-vector $update-modulator)))
+        ($updated-state (state $current-goal-vec (cons modulatorVector $update-modulator)))
         ($_ (remove-state $space))
         ($_ (add-state $space $updated-state))
         
