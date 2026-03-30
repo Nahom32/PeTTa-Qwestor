@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import re
 import os
 
-def _clamp01(value: float) -> float:
+def clampValues(value: float) -> float:
     if value < 0.0:
         return 0.0
     if value > 1.0:
@@ -211,16 +211,16 @@ def parse_with_openrouter(
         
         # Convert and clamp numerical values
         try:
-            complexity = _clamp01(float(complexity_raw)) if complexity_raw is not None else 0.3
-            ambiguity = _clamp01(float(ambiguity_raw)) if ambiguity_raw is not None else 0.0
-            expertise = _clamp01(float(expertise_raw)) if expertise_raw is not None else 0.5
-            threshold = _clamp01(float(threshold_raw))
-            topic_familiarity = _clamp01(float(topic_familiarity_raw))
-            failure_signal = _clamp01(float(failure_signal_raw))
-            reflective_intent = _clamp01(float(reflective_intent_raw))
-            needs_external_evidence = _clamp01(float(needs_external_evidence_raw))
-            needs_task_plan = _clamp01(float(needs_task_plan_raw))
-            needs_multi_source_integration = _clamp01(
+            complexity = clampValues(float(complexity_raw)) if complexity_raw is not None else 0.3
+            ambiguity = clampValues(float(ambiguity_raw)) if ambiguity_raw is not None else 0.0
+            expertise = clampValues(float(expertise_raw)) if expertise_raw is not None else 0.5
+            threshold = clampValues(float(threshold_raw))
+            topic_familiarity = clampValues(float(topic_familiarity_raw))
+            failure_signal = clampValues(float(failure_signal_raw))
+            reflective_intent = clampValues(float(reflective_intent_raw))
+            needs_external_evidence = clampValues(float(needs_external_evidence_raw))
+            needs_task_plan = clampValues(float(needs_task_plan_raw))
+            needs_multi_source_integration = clampValues(
                 float(needs_multi_source_integration_raw)
             )
             valence = _clamp11(float(valence_raw))

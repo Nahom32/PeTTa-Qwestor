@@ -130,96 +130,96 @@
 
         ; ── 1. m_urgency ────────────────────────────────────
         ($m_urgency
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space urgency_alpha))    (getMod $space m_urgency))
             (* (getAlpha $space urgency_alpha)            $target_u))))
 
         ; ── 2. m_resolution ─────────────────────────────────
         ($m_resolution
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space resolution_alpha)) (getMod $space m_resolution))
             (* (getAlpha $space resolution_alpha)         $cx))))
 
         ; ── 3. m_user_expertise ─────────────────────────────
         ($m_user_expertise
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space expertise_alpha))  (getMod $space m_user_expertise))
             (* (getAlpha $space expertise_alpha)          $exp))))
 
         ; ── 4. m_threshold ──────────────────────────────────
         ($m_threshold
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space threshold_alpha))  (getMod $space m_threshold))
             (* (getAlpha $space threshold_alpha)          $thr))))
 
         ; ── 5. m_topic_familiarity ──────────────────────────
         ($m_topic_familiarity
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space familiarity_alpha)) (getMod $space m_topic_familiarity))
             (* (getAlpha $space familiarity_alpha)         $fam))))
 
         ; ── 6. m_failure_wariness ───────────────────────────
         ($m_failure_wariness
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space failure_decay))    (getMod $space m_failure_wariness))
             (* (getAlpha $space failure_decay)            $fs))))
 
         ; ── 7. m_securing ───────────────────────────────────
         ($securing_target
-          (_clamp01 (+
+          (clampValues (+
             (* 0.50 $thr)
             (+ (* 0.30 $fs)
                (* 0.20 $amb)))))
         ($m_securing
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space securing_alpha))   (getMod $space m_securing))
             (* (getAlpha $space securing_alpha)           $securing_target))))
 
         ; ── 8. m_approach ───────────────────────────────────
         ($approach_target
-          (_clamp01 (+
+          (clampValues (+
             (* 0.45 $cx)
             (+ (* 0.25 (- 1.0 $amb))
                (+ (* 0.20 (- 1.0 $thr))
                   (* 0.10 (- 1.0 $fs)))))))
         ($m_approach
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space approach_alpha))   (getMod $space m_approach))
             (* (getAlpha $space approach_alpha)           $approach_target))))
 
         ; ── 9. m_arousal ────────────────────────────────────
         ($novelty_signal
-          (_clamp01 (+
+          (clampValues (+
             (* 0.35 $cx)
             (+ (* 0.35 (- 1.0 $fam))
                (+ (* 0.20 $ri)
                   (* 0.10 $amb))))))
         ($arousal_target
-          (_clamp01 (+
+          (clampValues (+
             0.25
             (+ (* 0.40 $m_urgency)
                (+ (* 0.35 $novelty_signal)
                   (* 0.20 $cx))))))
         ($m_arousal
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space arousal_alpha))    (getMod $space m_arousal))
             (* (getAlpha $space arousal_alpha)            $arousal_target))))
 
         ; ── 10. m_risk_aversion ─────────────────────────────
         ($risk_aversion_target
-          (_clamp01 (+
+          (clampValues (+
             (* 0.40 $thr)
             (+ (* 0.30 $fs)
                (+ (* 0.20 $amb)
                   (* 0.10 (if (== $urg 1) 1 0)))))))
         ($m_risk_aversion
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space risk_aversion_alpha)) (getMod $space m_risk_aversion))
             (* (getAlpha $space risk_aversion_alpha)         $risk_aversion_target))))
 
         ; ── 11. m_error_tolerance ───────────────────────────
         ($error_tolerance_target
-          (_clamp01 (+
+          (clampValues (+
             0.45
             (+ (* 0.25 (- 1.0 $thr))
                (+ (* 0.20 $fam)
@@ -227,13 +227,13 @@
                      (- (* -0.20 $amb)
                         (* 0.10 (if (== $urg 1) 1 0)))))))))
         ($m_error_tolerance
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space error_tolerance_alpha)) (getMod $space m_error_tolerance))
             (* (getAlpha $space error_tolerance_alpha)         $error_tolerance_target))))
 
         ; ── 12. m_creativity ────────────────────────────────
         ($creativity_target
-          (_clamp01 (+
+          (clampValues (+
             0.30
             (+ (* 0.30 (- 1.0 $fam))
                (+ (* 0.20 $cx)
@@ -241,7 +241,7 @@
                      (- (* 0.20 $ri)
                         (* 0.10 $fs))))))))
         ($m_creativity
-          (_clamp01 (+
+          (clampValues (+
             (* (- 1.0 (getAlpha $space creativity_alpha))     (getMod $space m_creativity))
             (* (getAlpha $space creativity_alpha)             $creativity_target))))
 

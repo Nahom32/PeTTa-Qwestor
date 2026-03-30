@@ -1,6 +1,6 @@
 ; !(add-context (context)) 
 ; !(+ (* (- 1.0 (get-alpha resolution_alpha)) (get-mod m_resolution)) (* (get-alpha resolution_alpha) (get-context complexity)))
-; !(_clamp01 (+ (* (- 1.0 (get-alpha resolution_alpha)) (get-mod m_resolution)) (* (get-alpha resolution_alpha) (get-context complexity))))
+; !(clampValues (+ (* (- 1.0 (get-alpha resolution_alpha)) (get-mod m_resolution)) (* (get-alpha resolution_alpha) (get-context complexity))))
 ; !(get-mods &sp)
 ; !(update-modulator &sp m_resolution 0.9)
 ; !(update-goal &sp energy 0.8)
