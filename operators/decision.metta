@@ -539,7 +539,7 @@
 
 ; ─────────────────────────────────────────────
 ; antiGoalTargets – port of Python logic
-; Returns an anti-goalVector with clamped targets.
+; Returns an antiGoalVector with clamped targets.
 ; ─────────────────────────────────────────────
 (= (antiGoalTargets $space $goals)
     (let*
@@ -605,7 +605,7 @@
                           (+ (* 0.20 (- 1.0 $ambiguity))
                              (* 0.08 $expertise)))))))
         )
-        (anti-goalVector
+        (antiGoalVector
           (hallucinate (clampValues $hallucinate_target))
           (redundant   (clampValues $redundant_target))
           (rabbit_hole (clampValues $rabbit_hole_target))
