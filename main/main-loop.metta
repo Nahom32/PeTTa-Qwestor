@@ -38,11 +38,12 @@
    (let*
      (
       ($_ (addAlpha $space (alpha)))
-      ($_ (addState $space (state (default-goals) (default-mods))))
+      ($_ (addState $space (state (default-goals) (default-mods) (default-anti-goals))))
       )
      "atoms added"
      )
 )
+
 
 (= (mainLoop $space $query)
     (let* (
@@ -55,9 +56,9 @@
     )
 )
 
-
 ; ─────────────────────────────────────────────
 ; Entry point
 ; ─────────────────────────────────────────────
-!(setUpSpace &space)
-!(mainLoop &space "Can you verify if the quantum computing breakthrough is real? I need detailed analysis comparing expert opinions.")
+; !(setUpSpace &space)
+; !(mainLoop &space "Can you verify if the quantum computing breakthrough is real? I need detailed analysis comparing expert opinions.")
+(..................)

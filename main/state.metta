@@ -52,7 +52,7 @@
 (= (fetchGoals $space)(match $space (state $x $y) $x))
 
 (= (remove-state $space)
- (let $state (fetch-state $space) (remove-atom $space $state))
+ (let $state (match $space (state $x $y $z) (state $x $y $z)) (remove-atom $space $state))
 )
 
 (= (replaceByIndex $expr $index $new)

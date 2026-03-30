@@ -276,21 +276,38 @@
 ; ─────────────────────────────────────────────
 ; Alpha hyper-parameters (learning rates)
 ; ─────────────────────────────────────────────
-(= (alpha) (
-    (urgency_alpha        0.60)
-    (resolution_alpha     0.45)
-    (expertise_alpha      0.45)
-    (threshold_alpha      0.40)
-    (familiarity_alpha    0.35)
-    (failure_alpha        0.55)
-    (failure_decay        0.20)
-    (securing_alpha       0.45)
-    (approach_alpha       0.40)
-    (arousal_alpha        0.40)
-    (risk_aversion_alpha  0.45)
-    (error_tolerance_alpha 0.40)
-    (creativity_alpha     0.40)
-    (valence_alpha        0.40)))
+(= (alpha)
+  (
+    (urgency_alpha              0.60)
+    (resolution_alpha           0.45)
+    (expertise_alpha            0.45)
+    (threshold_alpha            0.40)
+    (familiarity_alpha          0.35)
+    (failure_alpha              0.55)
+    (failure_decay              0.20)
+    (securing_alpha             0.45)
+    (approach_alpha             0.40)
+    (arousal_alpha              0.40)
+    (risk_aversion_alpha        0.45)
+    (error_tolerance_alpha      0.40)
+    (creativity_alpha           0.40)
+    (valence_alpha              0.40)
+    (goal_alpha                 0.18)
+    (anti_goal_alpha            0.16)
+    (cold_start_horizon         2.0)
+    (cold_start_strength        0.70)
+    (decompose_min_complexity   0.60)
+    (decompose_urgent_min_complexity 0.70)
+    (decompose_max_ambiguity    0.70)
+    (reflective_think_bonus     0.14)
+    (reflective_search_penalty  0.10)
+    (intent_margin              0.12)
+    (enable_homeostasis         0)
+    (homeostasis_theta_safe     0.55)
+    (homeostasis_eta            0.05)
+    (homeostasis_alpha_near     0.10)
+  )
+)
 
 
 ; ─────────────────────────────────────────────
@@ -312,7 +329,6 @@
         (m_creativity        0.45)
         (m_valence           0.00)
 ))
-
 
 ; ─────────────────────────────────────────────
 ; Default context values
@@ -356,4 +372,14 @@
  (over_beneficial      0.60)
  (over_safety          0.65)
  (over_honesty         0.65)
+))
+
+; ─────────────────────────────────────────────
+; Default anti-goal vector
+; ─────────────────────────────────────────────
+(= (default-anti-goals)(anti-goals
+    (hallucinate 0.35)
+    (redundant   0.30)
+    (rabbit_hole 0.28)
+    (premature   0.30)
 ))
