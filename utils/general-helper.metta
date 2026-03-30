@@ -14,7 +14,7 @@
 )
 
 ; Clamp a value to [-1, 1]
-(= (_clamp11 $x)
+(= (clampValence $x)
   (if (and (< $x 1) (> $x -1))
      $x
      (if (> $x 1)

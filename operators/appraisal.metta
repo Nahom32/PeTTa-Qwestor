@@ -247,9 +247,9 @@
 
         ; ── 13. m_valence ───────────────────────────────────
         ($valence_target
-          (_clamp11 (- $val (* 0.10 $fs))))
+          (clampValence (- $val (* 0.10 $fs))))
         ($m_valence
-          (_clamp11 (+
+          (clampValence (+
             (* (- 1.0 (getAlpha $space valence_alpha))        (getMod $space m_valence))
             (* (getAlpha $space valence_alpha)                $valence_target))))
       )

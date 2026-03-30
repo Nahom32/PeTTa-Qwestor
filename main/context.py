@@ -13,7 +13,7 @@ def clampValues(value: float) -> float:
         return 1.0
     return value
 
-def _clamp11(value: float) -> float:
+def clampValence(value: float) -> float:
     if value < -1.0:
         return -1.0
     if value > 1.0:
@@ -223,7 +223,7 @@ def parse_with_openrouter(
             needs_multi_source_integration = clampValues(
                 float(needs_multi_source_integration_raw)
             )
-            valence = _clamp11(float(valence_raw))
+            valence = clampValence(float(valence_raw))
         except (ValueError, TypeError) as e:
             print(f"Error converting numerical values: {e}")
             print(f"Raw values: {payload}")
