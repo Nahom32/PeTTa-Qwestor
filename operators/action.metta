@@ -1,3 +1,5 @@
+! (register-module! "../../PeTTa-Qwestor")
+! (import! &self PeTTa-Qwestor:utils:general-helper)
 !(import! &self appraisal)
 (= (Actions $space)
  ((AG act_respond (
@@ -167,7 +169,7 @@
              (act_decompose  (+ $base (* 0.10 $cx)))
          )))
         )
-        _clamp01($result)
+        clampValues($result)
       
     ))
 
@@ -190,7 +192,7 @@
          )
             (if (== $action act_respond) 
 
-                    (_clamp01 (+ 0.45 (* 0.25 (- 1.0 $cx)) (* 0.15 $familiarity) (* 0.10 (- 1.0 $urgency))))
+                    (clampValues (+ 0.45 (* 0.25 (- 1.0 $cx)) (* 0.15 $familiarity) (* 0.10 (- 1.0 $urgency))))
 
                     $base
                   ))
@@ -214,14 +216,14 @@
                         
          (if (== $action act_respond) 
 
-                    (_clamp01(+ (+ 0.40 (* 0.35 $cx))  (+ (* 0.25 $ambiguity) (* 0.20  $threshold))))
+                    (clampValues (+ (+ 0.40 (* 0.35 $cx))  (+ (* 0.25 $ambiguity) (* 0.20  $threshold))))
                     $base
              )
          ))
 
 
 
-(= (action_score_wraper $space $goalWeight $action_list $scored_action)
+(= (actionScoreWrapper $space $goalWeight $action_list $scored_action)
  (let* (
    ($turn_count (getState turn_count))
    ($appraisal_list (update-mod $space))
@@ -248,12 +250,12 @@
    ($risk_aversion (find_by_key risk_aversion $appraisal_list))
    ($error_tolerance (find_by_key error_tolerance $appraisal_list))
    ($creativity (find_by_key creativity $appraisal_list))
-   ($confidence  (_clamp01((+ (* 0.55  $familiarity)  (+ (* 0.25  (- 1.0  $ambiguity)) (* 0.20  (- 1.0  $cx)))))))
-   ($low_confidence (_clamp01(- 1.0  $confidence)))
-   ($answerability (_clamp01((* (- 1.0 $ambiguity) (* (- 1.0 $threshold_signal)  $familiarity_signal)))))
+   ($confidence  (clampValues((+ (* 0.55  $familiarity)  (+ (* 0.25  (- 1.0  $ambiguity)) (* 0.20  (- 1.0  $cx)))))))
+   ($low_confidence (clampValues(- 1.0  $confidence)))
+   ($answerability (clampValues((* (- 1.0 $ambiguity) (* (- 1.0 $threshold_signal)  $familiarity_signal)))))
    
  )
- (action_score_wraper 
+ (actionScoreWrapper 
  $space 
  $goalWeight
  $action_list
