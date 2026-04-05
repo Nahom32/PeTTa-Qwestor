@@ -151,8 +151,8 @@
 
 
 (= (_hallucination_penalty $action $cx $ambiguity)
-    (let*
-      (($action_list ((act_respond 0.90)
+    (let* (
+         ($action_list ((act_respond 0.90)
                      (act_search 0.30)
                      (act_verify 0.12)
                      (act_clarify 0.15)
@@ -170,8 +170,8 @@
          )))
         )
         clampValues($result)
-      
-    ))
+      )
+   )
 
 
 (= (_redundancy_penalty $action $cx $familiarity $urgency)
@@ -192,7 +192,7 @@
          )
             (if (== $action act_respond) 
 
-                    (clampValues (+ 0.45 (* 0.25 (- 1.0 $cx)) (* 0.15 $familiarity) (* 0.10 (- 1.0 $urgency))))
+                    (clampValues (+ (+ 0.45 (+ (* 0.25 (- 1.0 $cx)) (* 0.15 $familiarity))) (* 0.10 (- 1.0 $urgency))))
 
                     $base
                   ))
@@ -291,13 +291,22 @@
 
 ))
 
+
+;;==============================================================
+;;==============================================================
+;;==============================================================
+;;==============================================================
+
+
+
 (= (action_score $space $goalWeight $action_list $scored_action)
    (if (= $action_list ())
      $scored_action
-     (let*
+     (let* (
         ($score 0.0)
         (($h $t)  (decons-atom $action_list))
-        (case $h
+     )
+        (case $h (
         (act_clarify
   (+ $score
      (+ (* 0.90  $ambiguity)
@@ -518,4 +527,4 @@
    
    
    ))
-   ))
+   )))
