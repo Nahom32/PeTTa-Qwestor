@@ -1,4 +1,4 @@
-; !(addContext (context)) 
+; !(addContext (context))
 ; !(+ (* (- 1.0 (get-alpha resolution_alpha)) (get-mod m_resolution)) (* (get-alpha resolution_alpha) (get-context complexity)))
 ; !(clampValues (+ (* (- 1.0 (get-alpha resolution_alpha)) (get-mod m_resolution)) (* (get-alpha resolution_alpha) (get-context complexity))))
 ; !(get-mods &sp)
@@ -9,4 +9,4 @@
 ; !(getState &sp)
 
 ; !(get-context valence)
-; !(calculate-mod)
+; !(calculateMod)
