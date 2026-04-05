@@ -14,10 +14,10 @@
 
 (= (getMods $space)  (match $space (state $x $y) $y))
 (= (getGoals $space)(match $space (state $x $y) $x))
-(= (get_state $space)(match $space (state $x $y) (state $x $y)))
+(= (getState $space)(match $space (state $x $y) (state $x $y)))
 
 (= (remove-state $space)
- (let $state (get_state $space) (remove-atom $space $state))
+ (let $state (getState $space) (remove-atom $space $state))
 )
 
 ; Retrieve the value of a single modulator by name.
@@ -66,7 +66,7 @@
 
 
 ; ─────────────────────────────────────────────
-; addState / addItems / addAlpha / add-context
+; addState / addItems / addAlpha / addContext
 ; ─────────────────────────────────────────────
 
 (= (addState $space $state)
@@ -87,7 +87,7 @@
 )
 
 (= (addAlpha $space $list)    (addItems () $space $list))
-(= (add-context $space $list) (addItems () $space $list))
+(= (addContext $space $list) (addItems () $space $list))
 
 
 ; ─────────────────────────────────────────────

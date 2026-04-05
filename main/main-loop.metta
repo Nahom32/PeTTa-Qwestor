@@ -23,8 +23,8 @@
 ; ─────────────────────────────────────────────
 (= (addContexts $space $context)
    (if (== $context ())
-        (add-context $space (context))
-        (add-context $space $context)
+        (addContext $space (context))
+        (addContext $space $context)
     )
 )
 

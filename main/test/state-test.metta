@@ -1,6 +1,6 @@
 !(import! &self ../state)
 ; !(bind! &contextSpace (new-space))
-; !(add-context &contextSpace)
+; !(addContext &contextSpace)
 
 !(bind! &sp (new-space))
 !(add-state &sp (state (goalVector
